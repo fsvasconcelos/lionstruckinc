@@ -1,6 +1,6 @@
 @isTest
-private class MANDigitalHubServiceTest {
-    @isTest static  void testGetCallout() {
+public class MANDigitalHubServiceTest {
+    @isTest(SeeAllData=true) static void testGetCallout() {
         Test.setMock(HttpCalloutMock.class, new DigitalServiceHttpCalloutMock()); 
         // This causes a fake response to be sent
         // from the class that implements HttpCalloutMock. 
