@@ -1,6 +1,6 @@
 public with sharing class MANDigitalHubService {
-
-    public static HttpResponse getExternalService() {
+	@future(callout=true)
+    public static void getExternalService(String assetId) {
         Blob b = Crypto.GenerateAESKey(128);
         String h = EncodingUtil.ConvertTohex(b);
         String guid = h.SubString(0,8)+ '-' + h.SubString(8,12) + '-' + h.SubString(12,16) + '-' + h.SubString(16,20) + '-' + h.substring(20);
@@ -22,8 +22,12 @@ public with sharing class MANDigitalHubService {
 
             Map<String, Object> results = (Map<String, Object>) JSON.deserializeUntyped(response.getBody());
             System.debug(results);
+            Asset a = [SELECT Id,Product2.Vin__c,SerialNumber FROM Asset WHERE Id=:assetId LIMIT 1];
+            if(string.valueOf(results.get('vin')) == a.Product2.Vin__c )
+            {
+                a.SerialNumber = string.valueOf(results.get('vehicleNum'));
+                update a;
+			}
         }
-        
-        return response;
     }
 }
